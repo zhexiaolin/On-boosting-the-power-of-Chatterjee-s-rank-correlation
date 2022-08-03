@@ -23,12 +23,19 @@ XIMpower<-function(n,M,rho,simtype){
   for (time in 1:ntime){
     if (simtype=="gaussian"){
       mysample<-mvrnorm(n,mu,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
     if (simtype=="uniform"){
       mysample<-draw.d.variate.uniform(n,2,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
-    xvec <- mysample[,1]
-    yvec <- mysample[,2]
+    if (simtype=="nonlinear"){
+      xvec <- runif(n, -1, 1)
+      eps <- rnorm(n)
+      yvec <- rho*3/sqrt(n)*cos(2*pi*xvec) + eps
+    }
     time.start<-Sys.time()
     coef.stat <- XIMstat(xvec,yvec,M)
     time.end<-Sys.time()
@@ -44,7 +51,7 @@ for (n in c(1000,2000,5000)){
   for (M in c(1,20,100,200,n/2)){
     for (rho in c(0,1,2,5)){
       set.seed(123)
-      result<-rbind(result,XIMpower(n,M,rho,"gaussian"))
+      result<-rbind(result,XIMpower(n,M,rho,"nonlinear"))
       print(paste(n,M,rho,"complete"))
     }
   }
@@ -62,12 +69,19 @@ myhoeffding<-function(n,rho,simtype){
   for (time in 1:ntime){
     if (simtype=="gaussian"){
       mysample<-mvrnorm(n,mu,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
     if (simtype=="uniform"){
       mysample<-draw.d.variate.uniform(n,2,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
-    xvec <- mysample[,1]
-    yvec <- mysample[,2]
+    if (simtype=="nonlinear"){
+      xvec <- runif(n, -1, 1)
+      eps <- rnorm(n)
+      yvec <- rho*3/sqrt(n)*cos(2*pi*xvec) + eps
+    }
     time.start<-Sys.time()
     ordering = relative.order(xvec, yvec) - 1
     coef.stat <- 36*(n-1)*.calc.hoeffding(ordering)
@@ -84,7 +98,7 @@ result.hoeffding<-NULL
 for (n in c(1000,2000,5000)){
   for (rho in c(0,1,2,5)){
     set.seed(123)
-    result.hoeffding<-rbind(result.hoeffding,myhoeffding(n,rho,"gaussian"))
+    result.hoeffding<-rbind(result.hoeffding,myhoeffding(n,rho,"nonlinear"))
     print(paste(n,rho,"complete"))
   }
 }
@@ -101,12 +115,19 @@ mypearson<-function(n,rho,simtype){
   for (time in 1:ntime){
     if (simtype=="gaussian"){
       mysample<-mvrnorm(n,mu,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
     if (simtype=="uniform"){
       mysample<-draw.d.variate.uniform(n,2,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
-    xvec <- mysample[,1]
-    yvec <- mysample[,2]
+    if (simtype=="nonlinear"){
+      xvec <- runif(n, -1, 1)
+      eps <- rnorm(n)
+      yvec <- rho*3/sqrt(n)*cos(2*pi*xvec) + eps
+    }
     time.start<-Sys.time()
     coef.stat<-cor(xvec,yvec)
     time.end<-Sys.time()
@@ -122,7 +143,7 @@ result.pearson<-NULL
 for (n in c(1000,2000,5000)){
   for (rho in c(0,1,2,5)){
     set.seed(123)
-    result.pearson<-rbind(result.pearson,mypearson(n,rho,"gaussian"))
+    result.pearson<-rbind(result.pearson,mypearson(n,rho,"nonlinear"))
     print(paste(n,rho,"complete"))
   }
 }
@@ -194,12 +215,19 @@ debpower<-function(n,M,rho,simtype){
   for (time in 1:ntime){
     if (simtype=="gaussian"){
       mysample<-mvrnorm(n,mu,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
     if (simtype=="uniform"){
       mysample<-draw.d.variate.uniform(n,2,Sigma)
+      xvec <- mysample[,1]
+      yvec <- mysample[,2]
     }
-    xvec <- mysample[,1]
-    yvec <- mysample[,2]
+    if (simtype=="nonlinear"){
+      xvec <- runif(n, -1, 1)
+      eps <- rnorm(n)
+      yvec <- rho*3/sqrt(n)*cos(2*pi*xvec) + eps
+    }
     coef.stat <- debcoef(xvec,yvec,M)
     nrej <- nrej + XIMtestT(coef.stat,coef.sim,alpha)
   }
@@ -211,7 +239,7 @@ for (n in c(1000,2000,5000)){
   for (M in c(1,20,100,200,n/2)){
     for (rho in c(0,1,2,5)){
       set.seed(123)
-      result.deb<-rbind(result.deb,debpower(n,M,rho,"gaussian"))
+      result.deb<-rbind(result.deb,debpower(n,M,rho,"nonlinear"))
       print(paste(n,M,rho,"complete"))
     }
   }
